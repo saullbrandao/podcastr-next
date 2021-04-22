@@ -1,4 +1,11 @@
+import { useContext, useEffect, useRef } from 'react'
+import { PlayerContext } from '../../contexts/PlayerContext'
+import Image from 'next/image'
+import Slider from 'rc-slider'
+import 'rc-slider/assets/index.css'
+
 import styles from './styles.module.scss'
+
 
 export function Player() {
   return (
@@ -16,7 +23,11 @@ export function Player() {
         <div className={styles.progress}>
           <span>00:00</span>
           <div className={styles.slider}>
-            <div className={styles.emptySlider} />
+            {episode ? (<Slider
+              trackStyle={{ backgroundColor: '#04d361' }}
+              railStyle={{ backgroundColor: '#9f75ff' }}
+              handleStyle={{ borderColor: '#04d361', borderWidth: 4 }}
+            />) : (<div className={styles.emptySlider} />)}
           </div>
           <span>00:00</span>
         </div>
