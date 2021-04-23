@@ -1,5 +1,5 @@
-import { useContext, useEffect, useRef } from 'react'
-import { PlayerContext } from '../../contexts/PlayerContext'
+import { useEffect, useRef } from 'react'
+import { usePlayer } from '../../contexts/PlayerContext'
 import Image from 'next/image'
 import Slider from 'rc-slider'
 import 'rc-slider/assets/index.css'
@@ -18,7 +18,9 @@ export function Player() {
     setPlayingState,
     playNext,
     playPrevious,
-  } = useContext(PlayerContext)
+    hasNext,
+    hasPrevious,
+  } = usePlayer()
 
   useEffect(() => {
     if (!audioRef.current) return;
@@ -78,7 +80,7 @@ export function Player() {
           </button>
           <button
             type='button'
-            disabled={!episode}
+            disabled={!episode || !hasPrevious}
             onClick={playPrevious}
           >
             <img src="/play-previous.svg" alt="Tocar anterior" />
@@ -93,7 +95,7 @@ export function Player() {
           </button>
           <button
             type='button'
-            disabled={!episode}
+            disabled={!episode || !hasNext}
             onClick={playNext}
           >
             <img src="/play-next.svg" alt="Tocar proximo" />
