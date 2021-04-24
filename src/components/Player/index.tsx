@@ -12,6 +12,9 @@ export function Player() {
   const audioRef = useRef<HTMLAudioElement>(null)
 
   const [progress, setProgress] = useState(0)
+  const [volume, setVolume] = useState(0.5)
+  const [volumeIcon, setVolumeIcon] = useState('/volume-medium.svg')
+  const [showVolumeSlider, setShowVolumeSlider] = useState(false)
 
   const {
     episodeList,
@@ -32,13 +35,20 @@ export function Player() {
 
   useEffect(() => {
     if (!audioRef.current) return;
-
+    handleVolume(volume)
     if (isPlaying) {
       audioRef.current.play()
     } else {
       audioRef.current.pause()
     }
   }, [isPlaying])
+
+  useEffect(() => {
+    if (volume > 0.66) return setVolumeIcon('/volume-high.svg')
+    if (volume > 0.33) return setVolumeIcon('/volume-medium.svg')
+    if (volume > 0) return setVolumeIcon('/volume-low.svg')
+    setVolumeIcon('/volume-mute.svg')
+  }, [volume])
 
   function setupProgressListener() {
     audioRef.current.currentTime = 0
@@ -60,6 +70,11 @@ export function Player() {
     }
   }
 
+  function handleVolume(amount: number) {
+    audioRef.current.volume = amount
+    setVolume(amount)
+  }
+
   const episode = episodeList[currentEpisodeIndex]
 
   return (
@@ -69,13 +84,15 @@ export function Player() {
         <strong>Tocando agora {episode?.title}</strong>
       </header>
 
-      {episode ? (<div className={styles.currentEpisode}>
-        <Image width={592} height={592} src={episode.thumbnail} objectFit='cover' />
-        <strong>{episode.title}</strong>
-        <span>{episode.members}</span>
-      </div>) : (<div className={styles.emptyPlayer}>
-        <strong>Selecione um podcast para ouvir</strong>
-      </div>)}
+      {
+        episode ? (<div className={styles.currentEpisode}>
+          <Image width={592} height={592} src={episode.thumbnail} objectFit='cover' />
+          <strong>{episode.title}</strong>
+          <span>{episode.members}</span>
+        </div>) : (<div className={styles.emptyPlayer}>
+          <strong>Selecione um podcast para ouvir</strong>
+        </div>)
+      }
 
       <footer className={!episode ? styles.empty : ''}>
         <div className={styles.progress}>
@@ -149,8 +166,37 @@ export function Player() {
           >
             <img src="/repeat.svg" alt="Repetir" />
           </button>
+
+          <button
+            type='button'
+            disabled={!episode}
+            className={styles.volumeButton}
+            onClick={() => setShowVolumeSlider(true)}
+            onMouseOut={() => setShowVolumeSlider(false)}
+          >
+            {
+              showVolumeSlider && episode ?
+                <Slider
+                  className={styles.volumeSlider}
+                  value={volume}
+                  max={1}
+                  vertical={true}
+                  step={0.01}
+                  onChange={handleVolume}
+                  trackStyle={{ backgroundColor: '#04d361' }}
+                  railStyle={{ backgroundColor: '#9f75ff' }}
+                  handleStyle={{ borderColor: '#04d361', borderWidth: 4 }}
+                /> :
+
+                <img
+                  src={volumeIcon}
+                  alt="Volume"
+                />
+            }
+          </button>
+
         </div>
       </footer>
-    </div>
+    </div >
   )
 }
