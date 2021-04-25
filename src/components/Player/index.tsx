@@ -171,22 +171,27 @@ export function Player() {
             type='button'
             disabled={!episode}
             className={styles.volumeButton}
-            onClick={() => setShowVolumeSlider(true)}
-            onMouseOut={() => setShowVolumeSlider(false)}
+            onMouseEnter={() => setShowVolumeSlider(true)}
           >
             {
               showVolumeSlider && episode ?
-                <Slider
+                <div
                   className={styles.volumeSlider}
-                  value={volume}
-                  max={1}
-                  vertical={true}
-                  step={0.01}
-                  onChange={handleVolume}
-                  trackStyle={{ backgroundColor: '#04d361' }}
-                  railStyle={{ backgroundColor: '#9f75ff' }}
-                  handleStyle={{ borderColor: '#04d361', borderWidth: 4 }}
-                /> :
+                  onMouseLeave={() => setShowVolumeSlider(false)}
+                >
+
+                  <Slider
+                    value={volume}
+                    max={1}
+                    vertical={true}
+                    step={0.01}
+                    onChange={handleVolume}
+                    trackStyle={{ backgroundColor: '#04d361' }}
+                    railStyle={{ backgroundColor: '#9f75ff' }}
+                    handleStyle={{ borderColor: '#04d361', borderWidth: 4 }}
+                  />
+                </div>
+                :
 
                 <img
                   src={volumeIcon}
