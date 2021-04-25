@@ -6,15 +6,13 @@ import 'rc-slider/assets/index.css'
 
 import styles from './styles.module.scss'
 import { convertDurationToTimeString } from '../../utils/convertDurationToTimeString'
+import { VolumeControl } from '../VolumeControl'
 
 
 export function Player() {
   const audioRef = useRef<HTMLAudioElement>(null)
 
   const [progress, setProgress] = useState(0)
-  const [volume, setVolume] = useState(0.5)
-  const [volumeIcon, setVolumeIcon] = useState('/volume-medium.svg')
-  const [showVolumeSlider, setShowVolumeSlider] = useState(false)
 
   const {
     episodeList,
@@ -33,22 +31,16 @@ export function Player() {
     hasPrevious,
   } = usePlayer()
 
+  console.log('re render')
+
   useEffect(() => {
     if (!audioRef.current) return;
-    handleVolume(volume)
     if (isPlaying) {
       audioRef.current.play()
     } else {
       audioRef.current.pause()
     }
   }, [isPlaying])
-
-  useEffect(() => {
-    if (volume > 0.66) return setVolumeIcon('/volume-high.svg')
-    if (volume > 0.33) return setVolumeIcon('/volume-medium.svg')
-    if (volume > 0) return setVolumeIcon('/volume-low.svg')
-    setVolumeIcon('/volume-mute.svg')
-  }, [volume])
 
   function setupProgressListener() {
     audioRef.current.currentTime = 0
@@ -68,11 +60,6 @@ export function Player() {
     } else {
       clearPlayerState()
     }
-  }
-
-  function handleVolume(amount: number) {
-    audioRef.current.volume = amount
-    setVolume(amount)
   }
 
   const episode = episodeList[currentEpisodeIndex]
@@ -166,40 +153,7 @@ export function Player() {
           >
             <img src="/repeat.svg" alt="Repetir" />
           </button>
-
-          <button
-            type='button'
-            disabled={!episode}
-            className={styles.volumeButton}
-            onMouseEnter={() => setShowVolumeSlider(true)}
-          >
-            {
-              showVolumeSlider && episode ?
-                <div
-                  className={styles.volumeSlider}
-                  onMouseLeave={() => setShowVolumeSlider(false)}
-                >
-
-                  <Slider
-                    value={volume}
-                    max={1}
-                    vertical={true}
-                    step={0.01}
-                    onChange={handleVolume}
-                    trackStyle={{ backgroundColor: '#04d361' }}
-                    railStyle={{ backgroundColor: '#9f75ff' }}
-                    handleStyle={{ borderColor: '#04d361', borderWidth: 4 }}
-                  />
-                </div>
-                :
-
-                <img
-                  src={volumeIcon}
-                  alt="Volume"
-                />
-            }
-          </button>
-
+          <VolumeControl episode={episode} audioRef={audioRef} />
         </div>
       </footer>
     </div >

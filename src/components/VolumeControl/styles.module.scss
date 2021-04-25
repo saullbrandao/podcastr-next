@@ -1,0 +1,14 @@
+.volumeButton {
+  position: relative;
+}
+
+
+.volumeSlider {
+  position: absolute;
+  top: -1rem;
+  bottom: 0rem;
+  display: inline-block;
+  width: 2rem;
+  height: 3rem;
+  z-index: 2;
+}
