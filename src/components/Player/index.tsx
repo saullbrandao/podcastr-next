@@ -31,8 +31,6 @@ export function Player() {
     hasPrevious,
   } = usePlayer()
 
-  console.log('re render')
-
   useEffect(() => {
     if (!audioRef.current) return;
     if (isPlaying) {
