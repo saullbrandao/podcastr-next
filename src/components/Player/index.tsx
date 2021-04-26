@@ -153,7 +153,7 @@ export function Player() {
           >
             <img src="/repeat.svg" alt="Repetir" />
           </button>
-          <VolumeControl episode={episode} audioRef={audioRef} />
+          <VolumeControl disabled={!episode} audioRef={audioRef} />
         </div>
       </footer>
     </div >

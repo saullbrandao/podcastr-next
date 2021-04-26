@@ -1,9 +1,14 @@
-import { useEffect, useState } from 'react'
+import { RefObject, useEffect, useState } from 'react'
 import Slider from 'rc-slider'
 import 'rc-slider/assets/index.css'
 import styles from './styles.module.scss'
 
-export function VolumeControl({ episode, audioRef }) {
+type VolumeControlProps = {
+  audioRef: RefObject<HTMLAudioElement>;
+  disabled: boolean;
+}
+
+export function VolumeControl({ audioRef, disabled }: VolumeControlProps) {
 
   const [volumeIcon, setVolumeIcon] = useState('/volume-medium.svg')
   const [showVolumeSlider, setShowVolumeSlider] = useState(false)
@@ -28,7 +33,7 @@ export function VolumeControl({ episode, audioRef }) {
   return (
     <button
       type='button'
-      disabled={!episode}
+      disabled={disabled}
       className={styles.volumeButton}
       onMouseEnter={() => setShowVolumeSlider(true)}
     >      <img
